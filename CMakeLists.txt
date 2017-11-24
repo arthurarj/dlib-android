@@ -47,6 +47,10 @@ add_library(android_dlib SHARED
             ${DLIB_DIR}/dlib/base64/base64_kernel_1.cpp
             ${DLIB_DIR}/dlib/threads/threads_kernel_1.cpp
             ${DLIB_DIR}/dlib/threads/threads_kernel_2.cpp
+            ${DLIB_DIR}/dlib/threads/async.cpp
+            ${DLIB_DIR}/dlib/threads/thread_pool_extension.cpp
+            ${DLIB_DIR}/dlib/dnn/cpu_dlib.cpp
+            ${DLIB_DIR}/dlib/dnn/tensor_tools.cpp
             ${EXT_DIR}/miniglog/glog/logging.cc)
 
 target_link_libraries(android_dlib
