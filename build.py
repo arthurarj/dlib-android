@@ -66,23 +66,23 @@ def parse_args():
 def ndk_build(args):
     jobs = str(args.jobs)
     isDebug = '1' if args.debug else '0'
-    build_cmd = ['ndk-build',
+    build_cmd = ['ndk-build.cmd',
                  '-j' + jobs,
                  'NDK_LOG=1',
                  'NDK_DEBUG=' + isDebug,
                  'V=0']
     # Print the build command
-    print PrintColors.UNDERLINE + 'ndk build arguments:' + str(build_cmd) + PrintColors.ENDC
+    print(PrintColors.UNDERLINE + 'ndk build arguments:' + str(build_cmd) + PrintColors.ENDC)
     ret = subprocess.call(build_cmd)
     if ret is not 0:
-        print PrintColors.FAIL + 'Build Error' + PrintColors.ENDC
+        print(PrintColors.FAIL + 'Build Error' + PrintColors.ENDC)
         os.sys.exit(1)
     else:
-        print PrintColors.OKBLUE + 'Build Pass' + PrintColors.ENDC
+        print(PrintColors.OKBLUE + 'Build Pass' + PrintColors.ENDC)
 
 
 def ndk_clean():
-    subprocess.call(['ndk-build', 'clean'])
+    subprocess.call(['ndk-build.cmd', 'clean'])
 
 
 def setDeviceABI():
@@ -93,44 +93,44 @@ def setDeviceABI():
         b"input data that is passed to subprocess' stdin")
     rc = p.returncode
     if rc == 0:
-        if "x86" in output:
+        if b"x86" in output:
             DEVICE_ABI = 'x86'
 
-    print PrintColors.OKBLUE + 'We will use ABI:' + DEVICE_ABI + ' binaries to test ' + PrintColors.ENDC
+    print(PrintColors.OKBLUE + 'We will use ABI:' + DEVICE_ABI + ' binaries to test ' + PrintColors.ENDC)
 
 
 def test():
     global DEVICE_ABI
     # Test max_cost_assignment_ex daemon example
-    print '----max_cost_assignment_ex daemon test'
-    print '----Push svm_ex to phone device'
+    print('----max_cost_assignment_ex daemon test')
+    print('----Push svm_ex to phone device')
     srcFolder = os.path.join('libs', DEVICE_ABI, 'max_cost_assignment_ex')
     subprocess.call(['adb', 'push', srcFolder, '/data/local/tmp'])
-    print '----Execute /data/local/tmp/max_cost_assignment_ex'
+    print('----Execute /data/local/tmp/max_cost_assignment_ex')
     subprocess.call(['adb', 'shell', './data/local/tmp/max_cost_assignment_ex'])
 
-    print '\n\n'
-    print 'Test dlib selective search'
-    print '----selective search algorithm'
+    print('\n\n')
+    print('Test dlib selective search')
+    print('----selective search algorithm')
     srcFolder = os.path.join('data', 'lena.jpg')
-    print '----Push test image to data/local/tmp'
+    print('----Push test image to data/local/tmp')
     subprocess.call(['adb', 'push', srcFolder, '/data/local/tmp/lena.jpg'])
-    print '----Push daemon to /data/local/tmp'
+    print('----Push daemon to /data/local/tmp')
     srcFolder = os.path.join('libs', DEVICE_ABI, 'TestSelectiveSearch')
     subprocess.call(['adb', 'push', srcFolder, '/data/local/tmp'])
-    print '----Execute /data/local/tmp/TestSelectiveSearch'
+    print('----Execute /data/local/tmp/TestSelectiveSearch')
     subprocess.call(
         ['adb', 'shell', './data/local/tmp/TestSelectiveSearch', '/data/local/tmp/lena.jpg'])
 
-    print '\n\n'
-    print 'Test face landmark'
+    print('\n\n')
+    print('Test face landmark')
     srcFolder = os.path.join('data', 'lena.bmp')
     subprocess.call(['adb', 'push', srcFolder, '/data/local/tmp'])
     srcFolder = os.path.join('data', 'shape_predictor_68_face_landmarks.dat')
     subprocess.call(['adb', 'push', srcFolder, '/data/local/tmp'])
     srcFolder = os.path.join('libs', DEVICE_ABI, 'face_landmark')
     subprocess.call(['adb', 'push', srcFolder, '/data/local/tmp'])
-    print '----Execute /data/local/tmp/face_lanmark'
+    print('----Execute /data/local/tmp/face_lanmark')
     subprocess.call(['adb', 'shell', './data/local/tmp/face_landmark',
                     '/data/local/tmp/shape_predictor_68_face_landmarks.dat', '/data/local/tmp/lena.bmp'])
 
@@ -177,14 +177,14 @@ def test_cmake():
     cmake_cmd = cmake_cmd + ['-D', 'CMAKE_INSTALL_PREFIX=.']
     cmake_cmd = cmake_cmd + ['..']
     # Print the build command
-    print PrintColors.UNDERLINE + 'cmake build arguments:' + str(cmake_cmd) + PrintColors.ENDC
+    print(PrintColors.UNDERLINE + 'cmake build arguments:' + str(cmake_cmd) + PrintColors.ENDC)
     ret = subprocess.call(cmake_cmd)
     ret = subprocess.call(build_cmd)
     if ret is not 0:
-        print PrintColors.FAIL + 'Build Error' + PrintColors.ENDC
+        print(PrintColors.FAIL + 'Build Error' + PrintColors.ENDC)
         os.sys.exit(1)
     else:
-        print PrintColors.OKBLUE + 'Build Pass' + PrintColors.ENDC
+        print(PrintColors.OKBLUE + 'Build Pass' + PrintColors.ENDC)
 
 
 if __name__ == '__main__':
